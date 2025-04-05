@@ -78,15 +78,23 @@ namespace P3_Producer
                     // Check if it's a newline (Enter key)
                     if (input == 10 || input == 13)
                     {
-                        Console.WriteLine("Triggering all producers to upload videos...");
+                        Console.WriteLine("Triggering all producers to upload videos in parallel...");
                         
-                        // Trigger all producers to upload videos
+                        // Create a list to hold all the upload tasks
+                        List<Task> uploadTasks = new List<Task>();
+                        
+                        // Trigger all producers to upload videos in parallel
                         foreach (var producer in producers)
                         {
-                            producer.ExecuteUpload();
+                            // Create a task for each producer's upload operation
+                            Task uploadTask = Task.Run(() => producer.ExecuteUpload());
+                            uploadTasks.Add(uploadTask);
                         }
                         
-                        Console.WriteLine("All uploads triggered. Press Enter to trigger again or type 'q' and press Enter to quit");
+                        // Wait for all uploads to complete
+                        await Task.WhenAll(uploadTasks);
+                        
+                        Console.WriteLine("All uploads completed. Press Enter to trigger again or type 'q' and press Enter to quit");
                     }
                     // Check if it's 'q' or 'Q'
                     else if (input == 'q' || input == 'Q')
