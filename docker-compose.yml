@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  producer:
+    build:
+      context: .
+    volumes:
+      - ./producer_data:/app/producer_data
+      - ./config.txt:/app/config.txt
+    environment:
+      - CONSUMER_HOST=host.docker.internal

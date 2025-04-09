@@ -39,7 +39,7 @@ namespace P3_Producer
             for (int i = 0; i < config.ProducerCount; i++)
             {
                 int producerId = i + 1;
-                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), $"producer_{producerId}");
+                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "producer_data", $"producer_{producerId}");
                 
                 // Create a producer with a single assigned consumer endpoint
                 ProducerThread producer = new ProducerThread(producerId, folderPath, config.QueueLimit);
@@ -119,8 +119,12 @@ namespace P3_Producer
                 ProducerCount = 2,
                 ConsumerCount = 2,
                 QueueLimit = 10,
-                ConsumerEndpoints = new List<(string ip, int basePort)> { ("localhost", 9000) }
+                ConsumerEndpoints = new List<(string ip, int basePort)>()
             };
+            
+            // Check for Docker environment variable, use localhost as fallback
+            string consumerHost = Environment.GetEnvironmentVariable("CONSUMER_HOST") ?? "localhost";
+            config.ConsumerEndpoints.Add((consumerHost, 9000));
             
             try
             {
