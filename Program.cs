@@ -65,50 +65,26 @@ namespace P3_Producer
             }
             
             Console.WriteLine($"All {producers.Count} producers initialized");
-            Console.WriteLine("Press Enter to trigger all producers to upload videos or type 'q' and press Enter to quit");
+            Console.WriteLine("Waiting 12 seconds before starting uploads...");
             
-            // Main loop for user input using Console.Read instead of Console.ReadKey
-            while (true)
+            // Wait 12 seconds
+            await Task.Delay(12000);
+            
+            // Create a list to hold all the upload tasks
+            List<Task> uploadTasks = new List<Task>();
+            
+            // Trigger all producers to upload videos in parallel
+            foreach (var producer in producers)
             {
-                try
-                {
-                    // Read a character from the console
-                    int input = Console.Read();
-                    
-                    // Check if it's a newline (Enter key)
-                    if (input == 10 || input == 13)
-                    {
-                        Console.WriteLine("Triggering all producers to upload videos in parallel...");
-                        
-                        // Create a list to hold all the upload tasks
-                        List<Task> uploadTasks = new List<Task>();
-                        
-                        // Trigger all producers to upload videos in parallel
-                        foreach (var producer in producers)
-                        {
-                            // Create a task for each producer's upload operation
-                            Task uploadTask = Task.Run(() => producer.ExecuteUpload());
-                            uploadTasks.Add(uploadTask);
-                        }
-                        
-                        // Wait for all uploads to complete
-                        await Task.WhenAll(uploadTasks);
-                        
-                        Console.WriteLine("All uploads completed. Press Enter to trigger again or type 'q' and press Enter to quit");
-                    }
-                    // Check if it's 'q' or 'Q'
-                    else if (input == 'q' || input == 'Q')
-                    {
-                        Console.WriteLine("Exiting application...");
-                        break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
-                    break;
-                }
+                // Create a task for each producer's upload operation
+                Task uploadTask = Task.Run(() => producer.ExecuteUpload());
+                uploadTasks.Add(uploadTask);
             }
+            
+            // Wait for all uploads to complete
+            await Task.WhenAll(uploadTasks);
+            
+            Console.WriteLine("All uploads completed. Container will exit now.");
         }
         
         static Config ReadConfig()
