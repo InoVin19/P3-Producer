@@ -5,7 +5,6 @@ A .NET 9.0 console application that implements the producer side of a producer-c
 ## Key Features
 - Multiple producer threads (configurable)
 - Dedicated TCP connections to consumers
-- Leaky bucket queue implementation
 - Docker container support
 - Configurable via `config.txt`
 
