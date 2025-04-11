@@ -10,9 +10,9 @@ A .NET 9.0 console application that implements the producer side of a producer-c
 
 ## Configuration
 Create a `config.txt` file with these parameters:
-p=
-c=
-q=
+- p=
+- c=
+- q=
 
 ## Docker configuration
 Make sure that you have Docker and Docker Compose installed on your machine
